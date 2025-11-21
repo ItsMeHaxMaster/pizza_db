@@ -24,6 +24,8 @@ app.use("/api/rendeles", rendelesRouter);
 app.use("/api/tetel", tetelRouter);
 app.use("/api/vevo", vevoRouter);
 
+app.use("/static", express.static("images"));
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}/api`);
 });

@@ -29,12 +29,10 @@ tetelRouter.post("/", async (req, res) => {
   try {
     const tetelData = req.body;
 
-    // Validate request body exists
     if (!tetelData || Object.keys(tetelData).length === 0) {
       return res.status(400).send("Request body is empty or invalid");
     }
 
-    // Validate individual fields
     const missingFields = [];
     if (!tetelData.razon) missingFields.push("razon");
     if (!tetelData.pazon) missingFields.push("pazon");
@@ -46,7 +44,6 @@ tetelRouter.post("/", async (req, res) => {
         .send(`Missing required fields: ${missingFields.join(", ")}`);
     }
 
-    // Validate data types
     if (
       isNaN(tetelData.razon) ||
       isNaN(tetelData.pazon) ||
@@ -57,11 +54,17 @@ tetelRouter.post("/", async (req, res) => {
         .send("Fields razon, pazon, and db must be valid numbers");
     }
 
-    // Validate positive values
-    if (tetelData.razon <= 0 || tetelData.pazon <= 0 || tetelData.db <= 0) {
+    if (
+      tetelData.razon <= 0 ||
+      tetelData.pazon <= 0 ||
+      tetelData.db < 1 ||
+      tetelData.db > 20
+    ) {
       return res
         .status(400)
-        .send("Fields razon, pazon, and db must be positive numbers");
+        .send(
+          "Fields razon and pazon must be positive numbers, and db must be between 1 and 20"
+        );
     }
 
     const result = await tetelModel.createTetel(tetelData);
@@ -84,10 +87,10 @@ tetelRouter.put("/:razon/:pazon", async (req, res) => {
     const pazon = req.params.pazon;
     const tetelData = req.body;
 
-    if (isNaN(razon) || razon <= 0) {
+    if (isNaN(razon) || razon < 1 || razon > 20) {
       return res
         .status(400)
-        .send("Invalid order ID (razon). Must be a positive number");
+        .send("Invalid order ID (razon). Must be between 1 and 20");
     }
 
     if (!tetelData || Object.keys(tetelData).length === 0) {
@@ -98,12 +101,8 @@ tetelRouter.put("/:razon/:pazon", async (req, res) => {
       return res.status(400).send("Missing required field: db");
     }
 
-    if (isNaN(tetelData.db)) {
-      return res.status(400).send("Field db must be a valid number");
-    }
-
-    if (tetelData.pazon <= 0 || tetelData.db <= 0) {
-      return res.status(400).send("Field db must be a positive number");
+    if (isNaN(tetelData.db) || tetelData.db < 1 || tetelData.db > 20) {
+      return res.status(400).send("Field db must be a number between 1 and 20");
     }
 
     const result = await tetelModel.updateTetel(tetelData, razon, pazon);
