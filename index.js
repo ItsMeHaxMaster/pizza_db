@@ -6,6 +6,7 @@ import pizzaRouter from "./routes/pizzaRouter.js";
 import rendelesRouter from "./routes/rendelesRouter.js";
 import tetelRouter from "./routes/tetelRouter.js";
 import vevoRouter from "./routes/vevoRouter.js";
+import ujrendelesRouter from "./routes/ujrendelesRouter.js";
 
 const app = express();
 const PORT = process.env.SERVERPORT || 3000;
@@ -23,7 +24,7 @@ app.use("/api/pizza", pizzaRouter);
 app.use("/api/rendeles", rendelesRouter);
 app.use("/api/tetel", tetelRouter);
 app.use("/api/vevo", vevoRouter);
-
+app.use("/ujrendeles", ujrendelesRouter);
 app.use("/static", express.static("images"));
 
 app.listen(PORT, () => {
