@@ -2,14 +2,14 @@ import pool from "../db.js";
 
 export const getAllRendeles = async () => {
   const [rows] = await pool.query(
-    "SELECT t.razon AS Order_Id,  vnev AS Customer, f.fnev AS Carrier, v.vcim AS Address,SUM(t.db * p.par) AS Total, Date(r.idopont) AS Date FROM `tetel` t JOIN pizza p ON t.pazon = p.pazon JOIN rendeles r ON r.razon = t.razon JOIN vevo v ON r.vazon = v.vazon JOIN futar f ON f.fazon = r.fazon GROUP BY r.razon"
+    "SELECT t.razon AS Order_Id,  vnev AS Customer, f.fnev AS Carrier, v.vcim AS Address,SUM(t.db * p.par) AS Total, DATE_FORMAT(r.idopont, '%Y-%m-%d %H:%i:%s') AS Date FROM `tetel` t JOIN pizza p ON t.pazon = p.pazon JOIN rendeles r ON r.razon = t.razon JOIN vevo v ON r.vazon = v.vazon JOIN futar f ON f.fazon = r.fazon GROUP BY r.razon"
   );
   return rows;
 };
 
 export const getRendelesByRazon = async (razon) => {
   const [rows] = await pool.execute(
-    "SELECT t.razon AS Order_Id,  vnev AS Customer, f.fnev AS Carrier, v.vcim AS Address,SUM(t.db * p.par) AS Total, Date(r.idopont) AS Date FROM `tetel` t JOIN pizza p ON t.pazon = p.pazon JOIN rendeles r ON r.razon = t.razon JOIN vevo v ON r.vazon = v.vazon JOIN futar f ON f.fazon = r.fazon WHERE r.razon = ? GROUP BY r.razon",
+    "SELECT t.razon AS Order_Id,  vnev AS Customer, f.fnev AS Carrier, v.vcim AS Address,SUM(t.db * p.par) AS Total, DATE_FORMAT(r.idopont, '%Y-%m-%d %H:%i:%s') AS Date FROM `tetel` t JOIN pizza p ON t.pazon = p.pazon JOIN rendeles r ON r.razon = t.razon JOIN vevo v ON r.vazon = v.vazon JOIN futar f ON f.fazon = r.fazon WHERE r.razon = ? GROUP BY r.razon",
     [razon]
   );
   return rows[0];
